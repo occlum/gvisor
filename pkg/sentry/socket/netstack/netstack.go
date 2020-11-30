@@ -996,7 +996,7 @@ func getSockOptSocket(t *kernel.Task, s socket.SocketOps, ep commonEndpoint, fam
 			return nil, syserr.ErrInvalidArgument
 		}
 
-		size, err := ep.GetSockOptInt(tcpip.SendBufferSizeOption)
+		size, err := ep.SocketOptions().GetSendBufferSize()
 		if err != nil {
 			return nil, syserr.TranslateNetstackError(err)
 		}
@@ -1042,10 +1042,7 @@ func getSockOptSocket(t *kernel.Task, s socket.SocketOps, ep commonEndpoint, fam
 		return &v, nil
 
 	case linux.SO_BINDTODEVICE:
-		var v tcpip.BindToDeviceOption
-		if err := ep.GetSockOpt(&v); err != nil {
-			return nil, syserr.TranslateNetstackError(err)
-		}
+		v := ep.SocketOptions().GetBindToDevice()
 		if v == 0 {
 			var b primitive.ByteSlice
 			return &b, nil
@@ -1769,7 +1766,8 @@ func setSockOptSocket(t *kernel.Task, s socket.SocketOps, ep commonEndpoint, nam
 		}
 
 		v := usermem.ByteOrder.Uint32(optVal)
-		return syserr.TranslateNetstackError(ep.SetSockOptInt(tcpip.SendBufferSizeOption, int(v)))
+		ep.SocketOptions().SetSendBufferSize(int64(v), true)
+		return nil
 
 	case linux.SO_RCVBUF:
 		if len(optVal) < sizeOfInt32 {
@@ -1804,8 +1802,7 @@ func setSockOptSocket(t *kernel.Task, s socket.SocketOps, ep commonEndpoint, nam
 		}
 		name := string(optVal[:n])
 		if name == "" {
-			v := tcpip.BindToDeviceOption(0)
-			return syserr.TranslateNetstackError(ep.SetSockOpt(&v))
+			return syserr.TranslateNetstackError(ep.SocketOptions().SetBindToDevice(0))
 		}
 		s := t.NetworkContext()
 		if s == nil {
@@ -1813,8 +1810,7 @@ func setSockOptSocket(t *kernel.Task, s socket.SocketOps, ep commonEndpoint, nam
 		}
 		for nicID, nic := range s.Interfaces() {
 			if nic.Name == name {
-				v := tcpip.BindToDeviceOption(nicID)
-				return syserr.TranslateNetstackError(ep.SetSockOpt(&v))
+				return syserr.TranslateNetstackError(ep.SocketOptions().SetBindToDevice(nicID))
 			}
 		}
 		return syserr.ErrUnknownDevice

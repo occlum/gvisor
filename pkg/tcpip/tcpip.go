@@ -746,10 +746,6 @@ const (
 	// number of unread bytes in the input buffer should be returned.
 	ReceiveQueueSizeOption
 
-	// SendBufferSizeOption is used by SetSockOptInt/GetSockOptInt to
-	// specify the send buffer size option.
-	SendBufferSizeOption
-
 	// ReceiveBufferSizeOption is used by SetSockOptInt/GetSockOptInt to
 	// specify the receive buffer size option.
 	ReceiveBufferSizeOption
@@ -916,14 +912,6 @@ type GettableSocketOption interface {
 type SettableSocketOption interface {
 	isSettableSocketOption()
 }
-
-// BindToDeviceOption is used by SetSockOpt/GetSockOpt to specify that sockets
-// should bind only on a specific NIC.
-type BindToDeviceOption NICID
-
-func (*BindToDeviceOption) isGettableSocketOption() {}
-
-func (*BindToDeviceOption) isSettableSocketOption() {}
 
 // TCPInfoOption is used by GetSockOpt to expose TCP statistics.
 //

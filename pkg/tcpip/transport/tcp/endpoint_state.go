@@ -185,8 +185,9 @@ func (e *endpoint) Resume(s *stack.Stack) {
 	case StateInitial, StateBound, StateListen, StateConnecting, StateEstablished:
 		var ss tcpip.TCPSendBufferSizeRangeOption
 		if err := e.stack.TransportProtocolOption(ProtocolNumber, &ss); err == nil {
-			if e.sndBufSize < ss.Min || e.sndBufSize > ss.Max {
-				panic(fmt.Sprintf("endpoint.sndBufSize %d is outside the min and max allowed [%d, %d]", e.sndBufSize, ss.Min, ss.Max))
+			sendBufferSize, _ := e.ops.GetSendBufferSize()
+			if sendBufferSize < int64(ss.Min) || sendBufferSize > int64(ss.Max) {
+				panic(fmt.Sprintf("endpoint sendBufferSize %d is outside the min and max allowed [%d, %d]", sendBufferSize, ss.Min, ss.Max))
 			}
 		}
 

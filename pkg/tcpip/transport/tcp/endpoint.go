@@ -502,9 +502,6 @@ type endpoint struct {
 	// sack holds TCP SACK related information for this endpoint.
 	sack SACKInfo
 
-	// bindToDevice is set to the NIC on which to bind or disabled if 0.
-	bindToDevice tcpip.NICID
-
 	// delay enables Nagle's algorithm.
 	//
 	// delay is a boolean (0 is false) and must be accessed atomically.
@@ -544,7 +541,6 @@ type endpoint struct {
 	// When the send side is closed, the protocol goroutine is notified via
 	// sndCloseWaker, and sndClosed is set to true.
 	sndBufMu      sync.Mutex `state:"nosave"`
-	sndBufSize    int
 	sndBufUsed    int
 	sndClosed     bool
 	sndBufInQueue seqnum.Size
@@ -856,7 +852,6 @@ func newEndpoint(s *stack.Stack, netProto tcpip.NetworkProtocolNumber, waiterQue
 		waiterQueue: waiterQueue,
 		state:       StateInitial,
 		rcvBufSize:  DefaultReceiveBufferSize,
-		sndBufSize:  DefaultSendBufferSize,
 		sndMTU:      int(math.MaxInt32),
 		keepalive: keepalive{
 			// Linux defaults.
@@ -869,13 +864,14 @@ func newEndpoint(s *stack.Stack, netProto tcpip.NetworkProtocolNumber, waiterQue
 		windowClamp:   DefaultReceiveBufferSize,
 		maxSynRetries: DefaultSynRetries,
 	}
-	e.ops.InitHandler(e)
+	e.ops.InitHandler(e, e.stack)
 	e.ops.SetMulticastLoop(true)
 	e.ops.SetQuickAck(true)
+	e.ops.SetSendBufferSize(DefaultSendBufferSize, false)
 
 	var ss tcpip.TCPSendBufferSizeRangeOption
 	if err := s.TransportProtocolOption(ProtocolNumber, &ss); err == nil {
-		e.sndBufSize = ss.Default
+		e.ops.SetSendBufferSize(int64(ss.Default), false)
 	}
 
 	var rs tcpip.TCPReceiveBufferSizeRangeOption
@@ -952,7 +948,8 @@ func (e *endpoint) Readiness(mask waiter.EventMask) waiter.EventMask {
 		// Determine if the endpoint is writable if requested.
 		if (mask & waiter.EventOut) != 0 {
 			e.sndBufMu.Lock()
-			if e.sndClosed || e.sndBufUsed < e.sndBufSize {
+			sndBufSize, _ := e.ops.GetSendBufferSize()
+			if e.sndClosed || e.sndBufUsed < int(sndBufSize) {
 				result |= waiter.EventOut
 			}
 			e.sndBufMu.Unlock()
@@ -1415,7 +1412,8 @@ func (e *endpoint) isEndpointWritableLocked() (int, *tcpip.Error) {
 		return 0, tcpip.ErrClosedForSend
 	}
 
-	avail := e.sndBufSize - e.sndBufUsed
+	sndBufSize, _ := e.ops.GetSendBufferSize()
+	avail := int(sndBufSize) - e.sndBufUsed
 	if avail <= 0 {
 		return 0, tcpip.ErrWouldBlock
 	}
@@ -1664,6 +1662,32 @@ func (e *endpoint) OnCorkOptionSet(v bool) {
 	}
 }
 
+// OnSendBufferSizeOptionSet implements tcpip.SocketOptionsHandler.OnSendBufferSizeOptionSet.
+// TODO: Notify all the waiters when the send buffer size changes.
+func (e *endpoint) OnSendBufferSizeOptionSet(sendBufferSize int64) (int64, bool) {
+	// Make sure the send buffer size is within the min and max
+	// allowed.
+	var ss tcpip.TCPSendBufferSizeRangeOption
+	if err := e.stack.TransportProtocolOption(ProtocolNumber, &ss); err != nil {
+		panic(fmt.Sprintf("e.stack.TransportProtocolOption(%d, %#v) = %s", ProtocolNumber, &ss, err))
+	}
+
+	v := sendBufferSize
+	if v > int64(ss.Max) {
+		v = int64(ss.Max)
+	}
+
+	if v < math.MaxInt32/tcpip.PacketOverheadFactor {
+		v *= tcpip.PacketOverheadFactor
+		if v < int64(ss.Min) {
+			v = int64(ss.Min)
+		}
+	} else {
+		v = math.MaxInt32
+	}
+	return v, true
+}
+
 // SetSockOptInt sets a socket option.
 func (e *endpoint) SetSockOptInt(opt tcpip.SockOptInt, v int) *tcpip.Error {
 	// Lower 2 bits represents ECN bits. RFC 3168, section 23.1
@@ -1757,31 +1781,6 @@ func (e *endpoint) SetSockOptInt(opt tcpip.SockOptInt, v int) *tcpip.Error {
 		e.rcvListMu.Unlock()
 		e.UnlockUser()
 
-	case tcpip.SendBufferSizeOption:
-		// Make sure the send buffer size is within the min and max
-		// allowed.
-		var ss tcpip.TCPSendBufferSizeRangeOption
-		if err := e.stack.TransportProtocolOption(ProtocolNumber, &ss); err != nil {
-			panic(fmt.Sprintf("e.stack.TransportProtocolOption(%d, %#v) = %s", ProtocolNumber, &ss, err))
-		}
-
-		if v > ss.Max {
-			v = ss.Max
-		}
-
-		if v < math.MaxInt32/SegOverheadFactor {
-			v *= SegOverheadFactor
-			if v < ss.Min {
-				v = ss.Min
-			}
-		} else {
-			v = math.MaxInt32
-		}
-
-		e.sndBufMu.Lock()
-		e.sndBufSize = v
-		e.sndBufMu.Unlock()
-
 	case tcpip.TTLOption:
 		e.LockUser()
 		e.ttl = uint8(v)
@@ -1821,18 +1820,13 @@ func (e *endpoint) SetSockOptInt(opt tcpip.SockOptInt, v int) *tcpip.Error {
 	return nil
 }
 
+func (e *endpoint) HasNIC(id int32) bool {
+	return id == 0 || e.stack.HasNIC(tcpip.NICID(id))
+}
+
 // SetSockOpt sets a socket option.
 func (e *endpoint) SetSockOpt(opt tcpip.SettableSocketOption) *tcpip.Error {
 	switch v := opt.(type) {
-	case *tcpip.BindToDeviceOption:
-		id := tcpip.NICID(*v)
-		if id != 0 && !e.stack.HasNIC(id) {
-			return tcpip.ErrUnknownDevice
-		}
-		e.LockUser()
-		e.bindToDevice = id
-		e.UnlockUser()
-
 	case *tcpip.KeepaliveIdleOption:
 		e.keepalive.Lock()
 		e.keepalive.idle = time.Duration(*v)
@@ -1972,12 +1966,6 @@ func (e *endpoint) GetSockOptInt(opt tcpip.SockOptInt) (int, *tcpip.Error) {
 	case tcpip.ReceiveQueueSizeOption:
 		return e.readyReceiveSize()
 
-	case tcpip.SendBufferSizeOption:
-		e.sndBufMu.Lock()
-		v := e.sndBufSize
-		e.sndBufMu.Unlock()
-		return v, nil
-
 	case tcpip.ReceiveBufferSizeOption:
 		e.rcvListMu.Lock()
 		v := e.rcvBufSize
@@ -2013,11 +2001,6 @@ func (e *endpoint) GetSockOptInt(opt tcpip.SockOptInt) (int, *tcpip.Error) {
 // GetSockOpt implements tcpip.Endpoint.GetSockOpt.
 func (e *endpoint) GetSockOpt(opt tcpip.GettableSocketOption) *tcpip.Error {
 	switch o := opt.(type) {
-	case *tcpip.BindToDeviceOption:
-		e.LockUser()
-		*o = tcpip.BindToDeviceOption(e.bindToDevice)
-		e.UnlockUser()
-
 	case *tcpip.TCPInfoOption:
 		*o = tcpip.TCPInfoOption{}
 		e.LockUser()
@@ -2220,11 +2203,12 @@ func (e *endpoint) connect(addr tcpip.FullAddress, handshake bool, run bool) *tc
 			}
 		}
 
+		bindToDevice := tcpip.NICID(e.ops.GetBindToDevice())
 		if _, err := e.stack.PickEphemeralPortStable(portOffset, func(p uint16) (bool, *tcpip.Error) {
 			if sameAddr && p == e.ID.RemotePort {
 				return false, nil
 			}
-			if _, err := e.stack.ReservePort(netProtos, ProtocolNumber, e.ID.LocalAddress, p, e.portFlags, e.bindToDevice, addr, nil /* testPort */); err != nil {
+			if _, err := e.stack.ReservePort(netProtos, ProtocolNumber, e.ID.LocalAddress, p, e.portFlags, bindToDevice, addr, nil /* testPort */); err != nil {
 				if err != tcpip.ErrPortInUse || !reuse {
 					return false, nil
 				}
@@ -2262,15 +2246,15 @@ func (e *endpoint) connect(addr tcpip.FullAddress, handshake bool, run bool) *tc
 				tcpEP.notifyProtocolGoroutine(notifyAbort)
 				tcpEP.UnlockUser()
 				// Now try and Reserve again if it fails then we skip.
-				if _, err := e.stack.ReservePort(netProtos, ProtocolNumber, e.ID.LocalAddress, p, e.portFlags, e.bindToDevice, addr, nil /* testPort */); err != nil {
+				if _, err := e.stack.ReservePort(netProtos, ProtocolNumber, e.ID.LocalAddress, p, e.portFlags, bindToDevice, addr, nil /* testPort */); err != nil {
 					return false, nil
 				}
 			}
 
 			id := e.ID
 			id.LocalPort = p
-			if err := e.stack.RegisterTransportEndpoint(nicID, netProtos, ProtocolNumber, id, e, e.portFlags, e.bindToDevice); err != nil {
-				e.stack.ReleasePort(netProtos, ProtocolNumber, e.ID.LocalAddress, p, e.portFlags, e.bindToDevice, addr)
+			if err := e.stack.RegisterTransportEndpoint(nicID, netProtos, ProtocolNumber, id, e, e.portFlags, bindToDevice); err != nil {
+				e.stack.ReleasePort(netProtos, ProtocolNumber, e.ID.LocalAddress, p, e.portFlags, bindToDevice, addr)
 				if err == tcpip.ErrPortInUse {
 					return false, nil
 				}
@@ -2281,7 +2265,7 @@ func (e *endpoint) connect(addr tcpip.FullAddress, handshake bool, run bool) *tc
 			// the selected port.
 			e.ID = id
 			e.isPortReserved = true
-			e.boundBindToDevice = e.bindToDevice
+			e.boundBindToDevice = bindToDevice
 			e.boundPortFlags = e.portFlags
 			e.boundDest = addr
 			return true, nil
@@ -2633,7 +2617,8 @@ func (e *endpoint) bindLocked(addr tcpip.FullAddress) (err *tcpip.Error) {
 		e.ID.LocalAddress = addr.Addr
 	}
 
-	port, err := e.stack.ReservePort(netProtos, ProtocolNumber, addr.Addr, addr.Port, e.portFlags, e.bindToDevice, tcpip.FullAddress{}, func(p uint16) bool {
+	bindToDevice := tcpip.NICID(e.ops.GetBindToDevice())
+	port, err := e.stack.ReservePort(netProtos, ProtocolNumber, addr.Addr, addr.Port, e.portFlags, bindToDevice, tcpip.FullAddress{}, func(p uint16) bool {
 		id := e.ID
 		id.LocalPort = p
 		// CheckRegisterTransportEndpoint should only return an error if there is a
@@ -2644,7 +2629,7 @@ func (e *endpoint) bindLocked(addr tcpip.FullAddress) (err *tcpip.Error) {
 		// demuxer. Further connected endpoints always have a remote
 		// address/port. Hence this will only return an error if there is a matching
 		// listening endpoint.
-		if err := e.stack.CheckRegisterTransportEndpoint(nic, netProtos, ProtocolNumber, id, e.portFlags, e.bindToDevice); err != nil {
+		if err := e.stack.CheckRegisterTransportEndpoint(nic, netProtos, ProtocolNumber, id, e.portFlags, bindToDevice); err != nil {
 			return false
 		}
 		return true
@@ -2653,7 +2638,7 @@ func (e *endpoint) bindLocked(addr tcpip.FullAddress) (err *tcpip.Error) {
 		return err
 	}
 
-	e.boundBindToDevice = e.bindToDevice
+	e.boundBindToDevice = bindToDevice
 	e.boundPortFlags = e.portFlags
 	// TODO(gvisor.dev/issue/3691): Add test to verify boundNICID is correct.
 	e.boundNICID = nic
@@ -2776,13 +2761,14 @@ func (e *endpoint) HandleControlPacket(id stack.TransportEndpointID, typ stack.C
 // updateSndBufferUsage is called by the protocol goroutine when room opens up
 // in the send buffer. The number of newly available bytes is v.
 func (e *endpoint) updateSndBufferUsage(v int) {
+	sendBufferSize, _ := e.ops.GetSendBufferSize()
 	e.sndBufMu.Lock()
-	notify := e.sndBufUsed >= e.sndBufSize>>1
+	notify := e.sndBufUsed >= int(sendBufferSize)>>1
 	e.sndBufUsed -= v
-	// We only notify when there is half the sndBufSize available after
+	// We only notify when there is half the sendBufferSize available after
 	// a full buffer event occurs. This ensures that we don't wake up
 	// writers to queue just 1-2 segments and go back to sleep.
-	notify = notify && e.sndBufUsed < e.sndBufSize>>1
+	notify = notify && e.sndBufUsed < int(sendBufferSize)>>1
 	e.sndBufMu.Unlock()
 
 	if notify {
@@ -2994,8 +2980,9 @@ func (e *endpoint) completeState() stack.TCPEndpointState {
 	s.SACK.ReceivedBlocks, s.SACK.MaxSACKED = e.scoreboard.Copy()
 
 	// Copy endpoint send state.
+	sndBufSize, _ := e.ops.GetSendBufferSize()
 	e.sndBufMu.Lock()
-	s.SndBufSize = e.sndBufSize
+	s.SndBufSize = int(sndBufSize)
 	s.SndBufUsed = e.sndBufUsed
 	s.SndClosed = e.sndClosed
 	s.SndBufInQueue = e.sndBufInQueue
