@@ -1,4 +1,4 @@
-// Copyright 2019 The gVisor Authors.
+// Copyright 2020 The gVisor Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,22 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GVISOR_TEST_SYSCALLS_LINUX_SOCKET_IPV4_UDP_UNBOUND_EXTERNAL_NETWORKING_H_
-#define GVISOR_TEST_SYSCALLS_LINUX_SOCKET_IPV4_UDP_UNBOUND_EXTERNAL_NETWORKING_H_
+#ifndef GVISOR_TEST_SYSCALLS_LINUX_SOCKET_IP_UDP_UNBOUND_EXTERNAL_NETWORKING_H_
+#define GVISOR_TEST_SYSCALLS_LINUX_SOCKET_IP_UDP_UNBOUND_EXTERNAL_NETWORKING_H_
 
 #include "test/syscalls/linux/ip_socket_test_util.h"
-#include "test/syscalls/linux/socket_ip_udp_unbound_external_networking.h"
 #include "test/syscalls/linux/socket_test_util.h"
 
 namespace gvisor {
 namespace testing {
 
-// Test fixture for tests that apply to unbound IPv4 UDP sockets in a sandbox
+// Test fixture for tests that apply to unbound IP UDP sockets in a sandbox
 // with external networking support.
-using IPv4UDPUnboundExternalNetworkingSocketTest =
-    IPUDPUnboundExternalNetworkingSocketTest;
+class IPUDPUnboundExternalNetworkingSocketTest : public SimpleSocketTest {
+ protected:
+  void SetUp();
+
+  IfAddrHelper if_helper_;
+
+  // found_net_interfaces_ is set to false if SetUp() could not obtain
+  // all interface infos that we need.
+  bool found_net_interfaces_;
+
+  // Interface infos.
+  int lo_if_idx_;
+  int eth_if_idx_;
+  sockaddr_in lo_if_addr_;
+  sockaddr_in eth_if_addr_;
+};
 
 }  // namespace testing
 }  // namespace gvisor
 
-#endif  // GVISOR_TEST_SYSCALLS_LINUX_SOCKET_IPV4_UDP_UNBOUND_EXTERNAL_NETWORKING_H_
+#endif  // GVISOR_TEST_SYSCALLS_LINUX_SOCKET_IP_UDP_UNBOUND_EXTERNAL_NETWORKING_H_

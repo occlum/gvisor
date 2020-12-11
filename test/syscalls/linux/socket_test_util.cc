@@ -835,6 +835,16 @@ TestAddress V4Multicast() {
   return t;
 }
 
+TestAddress V6Multicast() {
+  TestAddress t("V6Multicast");
+  t.addr.ss_family = AF_INET6;
+  t.addr_len = sizeof(sockaddr_in6);
+  inet_pton(AF_INET6, "ff05::1234",
+            reinterpret_cast<void*>(
+                reinterpret_cast<sockaddr_in6*>(&t.addr)->sin6_addr.s6_addr));
+  return t;
+}
+
 TestAddress V4Broadcast() {
   TestAddress t("V4Broadcast");
   t.addr.ss_family = AF_INET;

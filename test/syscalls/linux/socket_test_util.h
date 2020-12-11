@@ -500,6 +500,7 @@ TestAddress V4Loopback();
 TestAddress V4MappedAny();
 TestAddress V4MappedLoopback();
 TestAddress V4Multicast();
+TestAddress V6Multicast();
 TestAddress V6Any();
 TestAddress V6Loopback();
 
