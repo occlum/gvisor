@@ -236,7 +236,7 @@ func TestIncomingMulticastAndBroadcast(t *testing.T) {
 			DstPort: localPort,
 			Length:  uint16(payloadLen),
 		})
-		copy(u.Payload(), data)
+		copy(u.UncheckedPayload(), data)
 		sum := header.PseudoHeaderChecksum(udp.ProtocolNumber, remoteIPv4Addr, dst, uint16(payloadLen))
 		sum = header.Checksum(data, sum)
 		u.SetChecksum(^u.CalculateChecksum(sum))
@@ -265,7 +265,7 @@ func TestIncomingMulticastAndBroadcast(t *testing.T) {
 			DstPort: localPort,
 			Length:  uint16(payloadLen),
 		})
-		copy(u.Payload(), data)
+		copy(u.UncheckedPayload(), data)
 		sum := header.PseudoHeaderChecksum(udp.ProtocolNumber, remoteIPv6Addr, dst, uint16(payloadLen))
 		sum = header.Checksum(data, sum)
 		u.SetChecksum(^u.CalculateChecksum(sum))

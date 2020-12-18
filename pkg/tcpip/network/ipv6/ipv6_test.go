@@ -895,7 +895,7 @@ func TestReceiveIPv6ExtHdrs(t *testing.T) {
 				DstPort: 80,
 				Length:  uint16(udpLength),
 			})
-			copy(u.Payload(), udpPayload)
+			copy(u.UncheckedPayload(), udpPayload)
 
 			dstAddr := tcpip.Address(addr2)
 			if test.multicast {
@@ -965,7 +965,10 @@ func TestReceiveIPv6ExtHdrs(t *testing.T) {
 				icmpPkt := header.ICMPv6(ipHdr.Payload())
 				// We know we sent small packets that won't be truncated when reflected
 				// back to us.
-				originalPacket := icmpPkt.Payload()
+				originalPacket, complete := icmpPkt.Payload()
+				if !complete {
+					t.Fatalf("got icmpPkt.Payload() = (%x, %t), want = (_, true)", originalPacket, complete)
+				}
 				if got, want := icmpPkt.TypeSpecific(), test.pointer; got != want {
 					t.Errorf("unexpected ICMPv6 pointer, got = %d, want = %d\n", got, want)
 				}
@@ -1033,7 +1036,7 @@ func TestReceiveIPv6Fragments(t *testing.T) {
 			DstPort: 80,
 			Length:  uint16(udpLength),
 		})
-		copy(u.Payload(), payload)
+		copy(u.UncheckedPayload(), payload)
 		sum := header.PseudoHeaderChecksum(udp.ProtocolNumber, src, dst, uint16(udpLength))
 		sum = header.Checksum(payload, sum)
 		u.SetChecksum(^u.CalculateChecksum(sum))

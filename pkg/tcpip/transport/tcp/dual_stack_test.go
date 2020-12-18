@@ -419,8 +419,12 @@ func testV4Accept(t *testing.T, c *context.Context) {
 	nep.Write(tcpip.SlicePayload(buffer.NewViewFromBytes([]byte(data))), tcpip.WriteOptions{})
 	b = c.GetPacket()
 	tcp = header.TCP(header.IPv4(b).Payload())
-	if string(tcp.Payload()) != data {
-		t.Fatalf("Unexpected data: got %v, want %v", string(tcp.Payload()), data)
+	tcpPayload, complete := tcp.Payload()
+	if !complete {
+		t.Fatalf("got tcp.Payload() = (%x, %t), want = (_, true)", tcpPayload, complete)
+	}
+	if string(tcpPayload) != data {
+		t.Fatalf("Unexpected data: got %v, want %v", string(tcpPayload), data)
 	}
 }
 
