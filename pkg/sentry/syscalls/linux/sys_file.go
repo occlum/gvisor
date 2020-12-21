@@ -156,6 +156,10 @@ func openAt(t *kernel.Task, dirFD int32, addr usermem.Addr, flags uint) (fd uint
 			return syserror.ELOOP
 		}
 
+		if fs.IsSocket(d.Inode.StableAttr) {
+			return syserror.ENXIO
+		}
+
 		fileFlags := linuxToFlags(flags)
 		// Linux always adds the O_LARGEFILE flag when running in 64-bit mode.
 		fileFlags.LargeFile = true
