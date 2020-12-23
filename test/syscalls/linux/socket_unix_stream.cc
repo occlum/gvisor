@@ -44,7 +44,7 @@ TEST_P(StreamUnixSocketPairTest, ReadOneSideClosed) {
   ASSERT_THAT(read(sockets->second_fd(), data, sizeof(data)),
               SyscallSucceedsWithValue(0));
 }
-
+/*
 TEST_P(StreamUnixSocketPairTest, RecvmsgOneSideClosed) {
   auto sockets = ASSERT_NO_ERRNO_AND_VALUE(NewSocketPair());
 
@@ -70,7 +70,7 @@ TEST_P(StreamUnixSocketPairTest, RecvmsgOneSideClosed) {
   ASSERT_THAT(recvmsg(sockets->second_fd(), &msg, MSG_WAITALL),
               SyscallSucceedsWithValue(0));
 }
-
+*/
 TEST_P(StreamUnixSocketPairTest, ReadOneSideClosedWithUnreadData) {
   auto sockets = ASSERT_NO_ERRNO_AND_VALUE(NewSocketPair());
 
@@ -103,6 +103,7 @@ TEST_P(StreamUnixSocketPairTest, Sendto) {
               SyscallFailsWithErrno(EISCONN));
 }
 
+/*
 TEST_P(StreamUnixSocketPairTest, SetAndGetSocketLinger) {
   auto sockets = ASSERT_NO_ERRNO_AND_VALUE(NewSocketPair());
 
@@ -120,6 +121,7 @@ TEST_P(StreamUnixSocketPairTest, SetAndGetSocketLinger) {
   ASSERT_EQ(length, sizeof(got_linger));
   EXPECT_EQ(0, memcmp(&got_linger, &sl, length));
 }
+*/
 
 INSTANTIATE_TEST_SUITE_P(
     AllUnixDomainSockets, StreamUnixSocketPairTest,

@@ -26,7 +26,7 @@ namespace {
 std::vector<SocketPairKind> GetSocketPairs() {
   return ApplyVec<SocketPairKind>(
       AbstractBoundUnixDomainSocketPair,
-      AllBitwiseCombinations(List<int>{SOCK_STREAM, SOCK_DGRAM, SOCK_SEQPACKET},
+      AllBitwiseCombinations(List<int>{SOCK_STREAM},
                              List<int>{SOCK_NONBLOCK}));
 }
 
