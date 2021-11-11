@@ -1,0 +1,4 @@
+EventfdTest.IllegalSeek
+EventfdTest.IllegalPread
+EventfdTest.IllegalPwrite
+EventfdTest.SpliceFromPipePartialSucceeds

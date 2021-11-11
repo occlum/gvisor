@@ -1,0 +1,6 @@
+PrctlKeepCapsSetuidTest.PrctlBadArgsToKeepCaps
+PrctlKeepCapsSetuidTest.SetUidNoKeepCaps
+PrctlKeepCapsSetuidTest.SetUidKeepCaps
+PrctlKeepCapsSetuidTest.NoKeepCapsAfterExec
+PrctlKeepCapsSetuidTest.NoKeepCapsAfterNewUserNamespace
+PrctlKeepCapsSetuidTest.PrGetKeepCaps

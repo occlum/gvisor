@@ -1,0 +1,5 @@
+IP6TablesBasic.FailSockoptNonRaw
+IP6TablesBasic.GetInfoErrorPrecedence
+IP6TablesBasic.GetEntriesErrorPrecedence
+IP6TablesTest.InitialInfo
+IP6TablesTest.InitialEntries

@@ -1,0 +1,13 @@
+GetpriorityTest.Implemented
+GetpriorityTest.InvalidWhich
+GetpriorityTest.ValidWho
+GetpriorityTest.InvalidWho
+GetpriorityTest.CloneMaintainsPriority
+SetpriorityTest.Implemented
+SetpriorityTest.ValidWho
+SetpriorityTest.InsideRange
+SetpriorityTest.NicenessExposedViaProcfs
+SetpriorityTest.OutsideRange
+SetpriorityTest.InvalidWho
+SetpriorityTest.NiceSucceeds
+Setpriority.InvalidWhich

@@ -1,0 +1,8 @@
+FixtureTruncateTest.Truncate
+FixtureTruncateTest.Ftruncate
+
+
+TruncateTest.FtruncateDir
+TruncateTest.TruncateNonWriteable
+TruncateTest.FtruncateNonWriteable
+TruncateTest.FtruncateVirtualTmp_NoRandomSave

@@ -1,0 +1,9 @@
+PpollTest.InvalidFds
+PpollTest.NullFds
+PpollTest.ZeroTimeout
+PpollTest.NoTimeout_NoRandomSave
+PpollTest.InvalidTimeoutNegative
+PpollTest.InvalidTimeoutNotNormalized
+PpollTest.InvalidMaskSize
+PpollTest.SignalMaskBlocksSignal
+PpollTest.SignalMaskAllowsSignal

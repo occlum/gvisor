@@ -1,0 +1,5 @@
+TimeTest.VsyscallTime_InvalidAddressSIGSEGV
+
+TimeTest.VsyscallTime_Succeeds
+TimeTest.VsyscallGettimeofday_Succeeds
+TimeTest.VsyscallGettimeofday_InvalidAddressSIGSEGV

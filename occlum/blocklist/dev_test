@@ -1,0 +1,11 @@
+DevTest.OpenDevFuse
+
+DevTest.LseekDevUrandom
+DevTest.LseekDevNull
+DevTest.LseekDevFull
+DevTest.LseekDevNullFreshFile
+DevTest.OpenTruncate
+DevTest.Pread64DevFull
+DevTest.WriteDevFull
+DevTest.TTYExists
+DevTest.ReadDevFuseWithoutMount

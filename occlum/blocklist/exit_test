@@ -1,0 +1,3 @@
+ExitTest.Success
+ExitTest.Failure
+ExitTest.CloseFds

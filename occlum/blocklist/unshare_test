@@ -1,0 +1,3 @@
+UnshareTest.ThreadFlagFailsIfMultithreaded
+
+UnshareTest.AllowsZeroFlags

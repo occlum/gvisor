@@ -1,0 +1,13 @@
+RseqTest.Unaligned
+RseqTest.Register
+RseqTest.DoubleRegister
+RseqTest.RegisterUnregister
+RseqTest.UnregisterDifferentPtr
+RseqTest.UnregisterDifferentSignature
+RseqTest.CPU
+RseqTest.Abort
+RseqTest.AbortBefore
+RseqTest.AbortSignature
+RseqTest.AbortPreCommit
+RseqTest.AbortClearsCS
+RseqTest.InvalidAbortClearsCS

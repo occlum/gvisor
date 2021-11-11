@@ -1,0 +1,5 @@
+Syscall32Bit.Int80
+Syscall32Bit.Sysenter
+Syscall32Bit.Syscall
+
+Call32Bit.Disallowed

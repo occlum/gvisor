@@ -1,0 +1,15 @@
+RawHDRINCL.MultipleCreation
+RawHDRINCL.FailShutdownWithoutConnect
+RawHDRINCL.FailListen
+RawHDRINCL.FailAccept
+RawHDRINCL.PollWritableImmediately
+RawHDRINCL.NotReadable
+RawHDRINCL.ConnectToLoopback
+RawHDRINCL.SendWithoutConnectSucceeds
+RawHDRINCL.NotReadableAfterWrite
+RawHDRINCL.WriteTooSmall
+RawHDRINCL.BindToLocalhost
+RawHDRINCL.BindToInvalid
+RawHDRINCL.SendAndReceive
+RawHDRINCL.SendAndReceiveDifferentAddress
+RawHDRINCL.SendAndReceiveIPHdrIncl

@@ -1,0 +1,5 @@
+GetrusageTest.BasicFork
+GetrusageTest.Grandchild
+GetrusageTest.IgnoreSIGCHLD
+GetrusageTest.IgnoreZombie
+GetrusageTest.Wait4

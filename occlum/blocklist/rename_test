@@ -1,0 +1,10 @@
+RenameTest.SourceIsAncestorOfTarget
+
+RenameTest.RootToAnything
+RenameTest.AnythingToRoot
+RenameTest.DirectoryToOwnChildDirectory
+RenameTest.FailsWithDots
+RenameTest.FailsWhenOldParentNotWritable
+RenameTest.FailsWhenNewParentNotWritable
+RenameTest.OverwriteFailsWhenNewParentNotWritable
+RenameTest.FileDoesNotExistWhenNewParentNotExecutable
