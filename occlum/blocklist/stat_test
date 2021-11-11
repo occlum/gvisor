@@ -1,0 +1,12 @@
+StatTest.BlocksIncreaseOnWrite
+StatTest.TrailingSlashNotCleanedReturnsENOTDIR
+StatTest.FstatatSymlinkDirWithTrailingSlash
+StatTest.FstatatSymlinkDirWithTrailingSlashSameInode
+StatTest.LstatSymlinkDir
+StatTest.StatxAbsPath
+StatTest.StatxRelPathDirFD
+StatTest.StatxRelPathCwd
+StatTest.StatxEmptyPath
+StatTest.StatxDoesNotRejectExtraneousMaskBits
+StatTest.StatxSymlink
+SimpleStatTest.AnonDeviceAllocatesUniqueInodesAcrossSaveRestore

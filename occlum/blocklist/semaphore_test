@@ -1,0 +1,15 @@
+SemaphoreTest.SemGet
+SemaphoreTest.SemOpSingleNoBlock
+SemaphoreTest.SemOpMultiNoBlock
+SemaphoreTest.SemOpBlock
+SemaphoreTest.SemOpNoBlock
+SemaphoreTest.SemOpSimple
+SemaphoreTest.SemOpRemoveWithWaiter_NoRandomSave
+SemaphoreTest.SemOpBestFitExecution
+SemaphoreTest.SemOpRandom
+SemaphoreTest.SemOpNamespace
+SemaphoreTest.SemCtlVal
+SemaphoreTest.SemCtlValAll
+SemaphoreTest.SemCtlGetPid
+SemaphoreTest.SemCtlGetPidFork
+SemaphoreTest.SemIpcSet

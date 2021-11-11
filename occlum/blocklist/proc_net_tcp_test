@@ -1,0 +1,10 @@
+ProcNetTCP.Exists
+ProcNetTCP.EntryUID
+ProcNetTCP.BindAcceptConnect
+ProcNetTCP.InodeReasonable
+ProcNetTCP.State
+ProcNetTCP6.Exists
+ProcNetTCP6.EntryUID
+ProcNetTCP6.BindAcceptConnect
+ProcNetTCP6.InodeReasonable
+ProcNetTCP6.State

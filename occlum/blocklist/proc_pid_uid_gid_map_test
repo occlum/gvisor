@@ -1,0 +1,14 @@
+All/ProcSelfUidGidMapTest.IsInitiallyEmpty/UID
+All/ProcSelfUidGidMapTest.IsInitiallyEmpty/GID
+All/ProcSelfUidGidMapTest.IdentityMapOwnID/UID
+All/ProcSelfUidGidMapTest.IdentityMapOwnID/GID
+All/ProcSelfUidGidMapTest.TrailingNewlineAndNULIgnored/UID
+All/ProcSelfUidGidMapTest.TrailingNewlineAndNULIgnored/GID
+All/ProcSelfUidGidMapTest.NonIdentityMapOwnID/UID
+All/ProcSelfUidGidMapTest.NonIdentityMapOwnID/GID
+All/ProcSelfUidGidMapTest.MapOtherID/UID
+All/ProcSelfUidGidMapTest.MapOtherID/GID
+All/ProcPidUidGidMapTest.MapOtherIDPrivileged/UID
+All/ProcPidUidGidMapTest.MapOtherIDPrivileged/GID
+All/ProcPidUidGidMapTest.MapAnyIDsPrivileged/UID
+All/ProcPidUidGidMapTest.MapAnyIDsPrivileged/GID

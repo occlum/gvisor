@@ -1,0 +1,5 @@
+AlarmTest.Interrupt_NoRandomSave
+AlarmTest.Restart_NoRandomSave
+AlarmTest.SaSiginfo_NoRandomSave
+AlarmTest.SaInterrupt_NoRandomSave
+AlarmTest.UserModeSpinning

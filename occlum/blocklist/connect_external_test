@@ -1,0 +1,11 @@
+Dgram/GoferDgramTest.Null/0
+Dgram/GoferDgramTest.Null/1
+
+StreamSeqpacket/GoferStreamSeqpacketTest.Echo/0
+StreamSeqpacket/GoferStreamSeqpacketTest.Echo/1
+StreamSeqpacket/GoferStreamSeqpacketTest.Echo/2
+StreamSeqpacket/GoferStreamSeqpacketTest.Echo/3
+StreamSeqpacket/GoferStreamSeqpacketTest.NonListening/0
+StreamSeqpacket/GoferStreamSeqpacketTest.NonListening/1
+StreamSeqpacket/GoferStreamSeqpacketTest.NonListening/2
+StreamSeqpacket/GoferStreamSeqpacketTest.NonListening/3

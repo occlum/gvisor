@@ -1,0 +1,11 @@
+PselectTest.NullFds
+PselectTest.ClosedFds
+PselectTest.ZeroTimeout
+PselectTest.NoTimeout_NoRandomSave
+PselectTest.InvalidTimeoutNegative
+PselectTest.InvalidTimeoutNotNormalized
+PselectTest.EmptySigMaskInvalidMaskSize
+PselectTest.EmptySigMaskValidMaskSize
+PselectTest.InvalidMaskSize
+PselectTest.SignalMaskBlocksSignal
+PselectTest.SignalMaskAllowsSignal

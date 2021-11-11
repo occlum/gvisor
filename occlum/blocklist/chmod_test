@@ -1,0 +1,12 @@
+ChmodTest.ChmodFileSucceeds
+ChmodTest.ChmodDirSucceeds
+ChmodTest.FchmodFileSucceeds_NoRandomSave
+ChmodTest.FchmodDirSucceeds_NoRandomSave
+ChmodTest.FchmodatBadF
+ChmodTest.FchmodatNotDir
+ChmodTest.FchmodatFileAbsolutePath
+ChmodTest.FchmodatDirAbsolutePath
+ChmodTest.FchmodatFile
+ChmodTest.FchmodatDir
+ChmodTest.ChmodFileToNoPermissionsSucceeds
+ChmodTest.FchmodFileToNoPermissionsSucceeds_NoRandomSave

@@ -1,0 +1,15 @@
+BasicCookedPacketTest.WrongType
+AllInetTests/CookedPacketTest.Receive/0
+AllInetTests/CookedPacketTest.Receive/1
+AllInetTests/CookedPacketTest.Send/0
+AllInetTests/CookedPacketTest.Send/1
+AllInetTests/CookedPacketTest.BindReceive/0
+AllInetTests/CookedPacketTest.BindReceive/1
+AllInetTests/CookedPacketTest.DoubleBindSucceeds/0
+AllInetTests/CookedPacketTest.DoubleBindSucceeds/1
+AllInetTests/CookedPacketTest.BindDrop/0
+AllInetTests/CookedPacketTest.BindDrop/1
+AllInetTests/CookedPacketTest.ReceiveOutbound/0
+AllInetTests/CookedPacketTest.ReceiveOutbound/1
+AllInetTests/CookedPacketTest.BindFail/0
+AllInetTests/CookedPacketTest.BindFail/1

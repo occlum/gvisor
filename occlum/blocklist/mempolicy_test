@@ -1,0 +1,9 @@
+MempolicyTest.CheckDefaultPolicy
+MempolicyTest.PolicyPreservedAfterSetMempolicy
+MempolicyTest.SetMempolicyRejectsInvalidInputs
+MempolicyTest.EmptyNodemaskOnSet
+MempolicyTest.QueryAvailableNodes
+MempolicyTest.GetMempolicyQueryNodeForAddress
+MempolicyTest.GetMempolicyCanOmitPointers
+MempolicyTest.GetMempolicyNextInterleaveNode
+MempolicyTest.Mbind

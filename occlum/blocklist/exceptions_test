@@ -1,0 +1,10 @@
+ExceptionTest.Halt
+ExceptionTest.DivideByZero
+ExceptionTest.X87DivideByZeroUnmasked
+ExceptionTest.X87StatusClobber
+ExceptionTest.SSEDivideByZeroUnmasked
+ExceptionTest.IOAccessFault
+ExceptionTest.AlignmentHalt
+ExceptionTest.AlignmentCheck
+ExceptionTest.Int3Normal
+ExceptionTest.Int3Compact

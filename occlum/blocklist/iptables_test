@@ -1,0 +1,6 @@
+IPTablesBasic.CreateSocket
+IPTablesBasic.FailSockoptNonRaw
+IPTablesBasic.GetInfoErrorPrecedence
+IPTablesBasic.GetEntriesErrorPrecedence
+IPTablesBasic.OriginalDstErrors
+IPTablesTest.InitialState

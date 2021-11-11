@@ -1,0 +1,10 @@
+KillTest.CanKillValidPid
+KillTest.CanKillAllPIDs
+KillTest.CannotKillInvalidPID
+KillTest.CanKillRemoteProcess
+KillTest.CanKillOwnProcess
+KillTest.CannotKillTid
+KillTest.SetPgid
+KillTest.ProcessGroups
+KillTest.ChildDropsPrivsCannotKill
+KillTest.CanSIGCONTSameSession

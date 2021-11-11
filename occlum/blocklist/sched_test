@@ -1,0 +1,7 @@
+SchedGetparamTest.ReturnsZero
+SchedGetparamTest.InvalidPIDReturnsEINVAL
+SchedGetparamTest.ImpossiblePIDReturnsESRCH
+SchedGetparamTest.NullParamReturnsEINVAL
+SchedGetschedulerTest.ReturnsSchedOther
+SchedGetschedulerTest.ReturnsEINVAL
+SchedGetschedulerTest.ReturnsESRCH

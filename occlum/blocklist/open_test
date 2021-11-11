@@ -1,0 +1,11 @@
+OpenTest.AppendConcurrentWrite
+
+OpenTest.OTrunc
+OpenTest.OTruncAndReadOnlyDir
+OpenTest.OCreateDirectory
+OpenTest.Fault
+OpenTest.Truncate
+OpenTest.CanTruncateReadOnly
+OpenTest.CanTruncateReadOnlyNoWritePermission_NoRandomSave
+OpenTest.CanTruncateWithStrangePermissions
+OpenTest.OpenNonDirectoryWithTrailingSlash

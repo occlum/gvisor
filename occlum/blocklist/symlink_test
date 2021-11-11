@@ -1,0 +1,7 @@
+SymlinkTest.CannotCreateSymlinkInReadOnlyDir
+SymlinkTest.SymlinkAtDegradedPermissions_NoRandomSave
+SymlinkTest.ReadlinkAtDegradedPermissions_NoRandomSave
+SymlinkTest.FollowUpdatesATime
+AbsAndRelTarget/ParamSymlinkTest.OpenLinkExclFails/0
+AbsAndRelTarget/ParamSymlinkTest.OpenLinkExclFails/1
+

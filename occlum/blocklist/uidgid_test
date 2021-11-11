@@ -1,0 +1,12 @@
+UidGidTest.Getuid
+UidGidTest.Getgid
+UidGidTest.Getgroups
+UidGidRootTest.Setuid
+UidGidRootTest.Setgid
+UidGidRootTest.SetgidNotFromThreadGroupLeader
+UidGidRootTest.Setreuid
+UidGidRootTest.Setregid
+UidGidRootTest.Setresuid
+UidGidRootTest.Setresgid
+UidGidRootTest.Setgroups
+UidGidRootTest.Setuid_prlimit

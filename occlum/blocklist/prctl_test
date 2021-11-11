@@ -1,0 +1,6 @@
+PrctlTest.ChildProcessName
+PrctlTest.NoNewPrivsPreservedAcrossCloneForkAndExecve
+PrctlTest.PDeathSig
+
+PrctlTest.InvalidPrSetMM
+PrctlTest.SetGetDumpability

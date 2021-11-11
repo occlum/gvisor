@@ -1,0 +1,6 @@
+AffinityTest.SchedSetAffinityInvalidSize
+AffinityTest.NewThread
+AffinityTest.ConsistentWithProcCpuInfo
+AffinityTest.ConsistentWithProcStat
+AffinityTest.SmallCpuMask
+AffinityTest.LargeCpuMask

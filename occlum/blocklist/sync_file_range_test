@@ -1,0 +1,3 @@
+SyncFileRangeTest.TempFileSucceeds
+SyncFileRangeTest.CannotSyncFileRangeOnUnopenedFd
+SyncFileRangeTest.BadArgs

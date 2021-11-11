@@ -1,0 +1,4 @@
+UnameTest.Sanity
+UnameTest.SetNames
+UnameTest.UnprivilegedSetNames
+UnameTest.UnshareUTS

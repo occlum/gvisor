@@ -1,0 +1,7 @@
+ProcNetUDP.Exists
+ProcNetUDP.EntryUID
+ProcNetUDP.FindMutualEntries
+ProcNetUDP.EntriesRemovedOnClose
+ProcNetUDP.BoundEntry
+ProcNetUDP.BoundSocketStateClosed
+ProcNetUDP.ConnectedSocketStateEstablished
