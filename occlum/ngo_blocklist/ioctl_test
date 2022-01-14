@@ -1,0 +1,6 @@
+IoctlTest/IoctlTestSIOCGIFCONF.ValidateNoArrayGetsLength/3
+IoctlTest/IoctlTestSIOCGIFCONF.ValidateNoArrayGetsLength/5
+IoctlTest/IoctlTestSIOCGIFCONF.ValidateNoPartialIfrsReturned/3
+IoctlTest/IoctlTestSIOCGIFCONF.ValidateNoPartialIfrsReturned/5
+IoctlTest/IoctlTestSIOCGIFCONF.ValidateLoopbackIsPresent/3
+IoctlTest/IoctlTestSIOCGIFCONF.ValidateLoopbackIsPresent/5

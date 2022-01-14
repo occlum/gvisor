@@ -3,13 +3,27 @@
 #set -x
 TEST_BIN_DIR=/opt/occlum/gvisor_syscall_tests
 BLOCKLIST_DIR=../blocklist
+NGO_BLOCKLIST_DIR=../ngo_blocklist
 TEST_LIST=../occlum_test_list.txt
 TESTS=0
 PASSED_TESTS=0
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 RESULT=0
 FILTER=""
+NGO_FILTER=""
+Way=$*
+
+get_ngo_blocklist_subtests(){
+	if [ -f $NGO_BLOCKLIST_DIR/$1 ]; then
+                        NGO_FILTER=$(cat $NGO_BLOCKLIST_DIR/$1 | tr '\n' ':')
+			return 0
+                else
+                        NGO_FILTER=""
+			return 1
+                fi
+}
 
 get_blocklist_subtests(){
 	if [ -f $BLOCKLIST_DIR/$1 ]; then
@@ -24,9 +38,18 @@ get_blocklist_subtests(){
 run_one_test(){
 	ret=""
 	if [ -f $TEST_BIN_DIR/$1 ]; then
-		get_blocklist_subtests $1
-		occlum exec /bin/$1 --gtest_filter=-$FILTER
+		printf "$GREEN running $1$NC"
+		if [[ $Way = "ngo" ]];then
+			get_blocklist_subtests $1
+			get_ngo_blocklist_subtests $1
+			FILTER=$FILTER$NGO_FILTER
+			occlum exec /bin/$1 --gtest_filter=-$FILTER
+		else
+			get_blocklist_subtests $1
+			occlum exec /bin/$1 --gtest_filter=-$FILTER
+		fi
 		ret=$?
+		FILTER=""
 	else
 		echo "Warning: test does not exit"
 		ret=1
@@ -34,6 +57,16 @@ run_one_test(){
 	return $ret
 }
 
+if [ -z $Way ];then
+	printf "$GREEN Running test cases passed in occlum $NC\n"
+else
+	if [ $Way != "ngo" ];then
+		echo The parameter is wrong, you can use '"./run_occlum_passed_tests.sh ngo"' to run the tests passed in ngo
+		exit -1
+	elif [ $Way = "ngo" ];then
+		printf "$GREEN Running test cases passed in ngo $NC\n"
+	fi
+fi
 rm -rf occlum_workspace
 occlum new occlum_workspace
 pushd occlum_workspace
