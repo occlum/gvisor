@@ -21,5 +21,9 @@ Since not all the tests are passed in occlum, failure may be encountered.
 ```
 ./run_occlum_passed_tests.sh
 ```
+- Run passed tests on ngo, run
+```
+./run_occlum_passed_tests.sh ngo
+```
 
 To add a test that are passed in occlum, put the name to `occlum_test_list.txt`. Sometimes, not all the subtests in a test can be passed. Add the failed subtests to the file in foler `blocklist`. Then, the failed subtests will not be run.
