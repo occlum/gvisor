@@ -1,0 +1,10 @@
+AllUnixDomainSockets/AllSocketPairTest.RecvTimeoutWaitAll/0
+AllUnixDomainSockets/AllSocketPairTest.RecvTimeoutWaitAll/2
+AllUnixDomainSockets/AllSocketPairTest.BasicReadWrite/1
+AllUnixDomainSockets/AllSocketPairTest.BasicReadWrite/3
+AllUnixDomainSockets/AllSocketPairTest.BasicSendRecv/1
+AllUnixDomainSockets/AllSocketPairTest.BasicSendRecv/3
+AllUnixDomainSockets/AllSocketPairTest.RecvWaitAll/1
+AllUnixDomainSockets/AllSocketPairTest.RecvWaitAll/3
+AllUnixDomainSockets/AllSocketPairTest.RecvTimeoutWaitAll/1
+AllUnixDomainSockets/AllSocketPairTest.RecvTimeoutWaitAll/3

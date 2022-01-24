@@ -1,0 +1,5 @@
+NetdeviceTest.Loopback
+NetdeviceTest.Netmask
+NetdeviceTest.InterfaceName
+NetdeviceTest.InterfaceFlags
+NetdeviceTest.InterfaceMTU
