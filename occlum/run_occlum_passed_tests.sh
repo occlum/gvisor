@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#set -x
 TEST_BIN_DIR=/opt/occlum/gvisor_syscall_tests
-BLOCKLIST_DIR=../blocklist
-NGO_BLOCKLIST_DIR=../ngo_blocklist
-TEST_LIST=../occlum_test_list.txt
+TEST_LIST=../test_list.txt # Test suite that will be running by default
+TEST_BLOCKLIST=../ngo_block_suite_list.txt # Test suite that will not be running for NGO
+BLOCKLIST_DIR=../blocklist # Test cases that will not be running for Occlum
+NGO_BLOCKLIST_DIR=../ngo_blocklist # Test cases that will not be running for NGO
 TESTS=0
 PASSED_TESTS=0
 RED='\033[0;31m'
@@ -17,12 +17,12 @@ OPERATION_MODE=$*
 
 get_ngo_blocklist_subtests(){
 	if [ -f $NGO_BLOCKLIST_DIR/$1 ]; then
-                        NGO_FILTER=$(cat $NGO_BLOCKLIST_DIR/$1 | tr '\n' ':')
-			return 0
-                else
-                        NGO_FILTER=""
-			return 1
-                fi
+		NGO_FILTER=$(cat $NGO_BLOCKLIST_DIR/$1 | tr '\n' ':')
+		return 0
+	else
+		NGO_FILTER=""
+		return 1
+	fi
 }
 
 get_blocklist_subtests(){
@@ -69,7 +69,7 @@ rm -rf occlum_workspace
 occlum new occlum_workspace
 pushd occlum_workspace
 new_json="$(jq '.resource_limits.user_space_size = "800MB" |
-                .resource_limits.kernel_space_heap_size = "100MB" |
+		.resource_limits.kernel_space_heap_size = "100MB" |
 		.process.default_mmap_size = "500MB"' Occlum.json)" && \
 echo "${new_json}" > Occlum.json
 cp $TEST_BIN_DIR/* ./image/bin
@@ -79,13 +79,16 @@ touch log
 
 while read syscall_test;
 do
-    run_one_test $syscall_test
-    if [ $? -eq 0 ] && PASSED_TESTS=$((PASSED_TESTS+1));then
-	    TESTS=$((TESTS+1))
-    else
-	    echo -e "$syscall_test" >> log
-	    TESTS=$((TESTS+1))
-    fi
+		if [ `grep -c "$syscall_test" $TEST_BLOCKLIST` -eq 1 ] && [[ $OPERATION_MODE = "ngo" ]];then
+		continue
+	fi
+	run_one_test $syscall_test
+		if [ $? -eq 0 ] && PASSED_TESTS=$((PASSED_TESTS+1));then
+		TESTS=$((TESTS+1))
+		else
+			echo -e "$syscall_test" >> log
+			TESTS=$((TESTS+1))
+		fi
 done < $TEST_LIST
 
 occlum stop
