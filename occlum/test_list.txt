@@ -77,7 +77,6 @@ ppoll_test
 prctl_setuid_test
 prctl_test
 pread64_test
-preadv2_test
 preadv_test
 priority_test
 proc_net_tcp_test
@@ -93,7 +92,6 @@ ptrace_test
 pty_root_test
 pty_test
 pwrite64_test
-pwritev2_test
 raw_socket_hdrincl_test
 raw_socket_icmp_test
 raw_socket_test
