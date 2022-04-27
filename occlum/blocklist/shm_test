@@ -4,24 +4,17 @@ ShmTest.ShmStat
 
 ShmDeathTest.ReadonlySegment
 ShmDeathTest.SegmentNotAccessibleAfterDetach
+
 ShmTest.AttachDetach
 ShmTest.LookupByKey
 ShmTest.DetachedSegmentsPersist
-ShmTest.MultipleDetachFails
-ShmTest.IpcStat
 ShmTest.IpcInfo
 ShmTest.ShmInfo
 ShmTest.ShmCtlSet
-ShmTest.RemovedSegmentsAreMarkedDeleted
 ShmTest.RemovedSegmentsAreDestroyed
 ShmTest.AllowsAttachToRemovedSegmentWithRefs
-ShmTest.RemovedSegmentsAreNotDiscoverable
 ShmTest.RequestingSegmentSmallerThanSHMMINFails
 ShmTest.RequestingSegmentLargerThanSHMMAXFails
-ShmTest.RequestingUnalignedSizeSucceeds
-ShmTest.RequestingDuplicateCreationFails
-ShmTest.NonExistentSegmentsAreNotFound
 ShmTest.SegmentsSizeFixedOnCreation
 ShmTest.PartialUnmap
-ShmTest.GracefullyFailOnZeroLenSegmentCreation
 ShmTest.NoDestructionOfAttachedSegmentWithMultipleRmid
