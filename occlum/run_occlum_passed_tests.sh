@@ -83,10 +83,11 @@ do
 		continue
 	fi
 	run_one_test $syscall_test
+	ret=$?
 	TESTS=$((TESTS+1))
 
 	# Ignore futex_test result due to timer's inaccuracy in Occlum
-	if [ $? -ne 0 ] && [[ "$syscall_test" != "futex_test" ]]; then
+	if [[ $ret -ne 0 ]] && [[ "$syscall_test" != "futex_test" ]]; then
 		echo -e "$syscall_test" >> log
 	else
 		PASSED_TESTS=$((PASSED_TESTS+1))
@@ -99,6 +100,5 @@ printf "$RED$PASSED_TESTS$NC of $RED$TESTS$NC test suites are passed\n"
 printf "The $(($TESTS-$PASSED_TESTS)) failed test suites in this run are as follows:\n"
 cat log
 rm log
-popd
 
 exit $RESULT

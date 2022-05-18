@@ -27,3 +27,10 @@ Since not all the tests are passed in occlum, failure may be encountered.
 ```
 
 To add a test that are passed in occlum, put the name to `occlum_test_list.txt`. Sometimes, not all the subtests in a test can be passed. Add the failed subtests to the file in foler `blocklist`. Then, the failed subtests will not be run.
+
+# Run single test case for Occlum/NGO
+
+After building the syscall tests, run:
+```
+./single_test.sh -p <occlum/ngo> -s <test suite> [-t <test case>] [-r <repeat times>] [-l <log file>]
+```
