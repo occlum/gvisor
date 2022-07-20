@@ -1,8 +1,0 @@
-TimerfdClockRealtimeTest.ClockRealtime
-AllTimerTypes/TimerfdTest.IsInitiallyStopped/CLOCK_MONOTONIC
-AllTimerTypes/TimerfdTest.SingleShot/CLOCK_MONOTONIC
-AllTimerTypes/TimerfdTest.Periodic/CLOCK_MONOTONIC
-AllTimerTypes/TimerfdTest.BlockingRead/CLOCK_MONOTONIC
-AllTimerTypes/TimerfdTest.NonblockingRead_NoRandomSave/CLOCK_MONOTONIC
-AllTimerTypes/TimerfdTest.BlockingPoll_SetTimeResetsExpirations/CLOCK_MONOTONIC
-AllTimerTypes/TimerfdTest.SetAbsoluteTime/CLOCK_MONOTONIC
