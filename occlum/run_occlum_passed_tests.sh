@@ -70,7 +70,7 @@ occlum new occlum_workspace
 pushd occlum_workspace
 new_json="$(jq '.resource_limits.user_space_size = "800MB" |
 		.resource_limits.kernel_space_heap_size = "100MB" |
-		.process.default_mmap_size = "500MB"' Occlum.json)" && \
+		.process.default_stack_size = "32MB"' Occlum.json)" && \
 echo "${new_json}" > Occlum.json
 cp $TEST_BIN_DIR/* ./image/bin
 occlum build

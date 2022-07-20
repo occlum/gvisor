@@ -1,0 +1,10 @@
+AllInetTests/TcpSocketTest.SenderAddressIgnoredOnPeek/0
+AllInetTests/TcpSocketTest.TcpInq/0
+AllInetTests/TcpSocketTest.FullBuffer/0
+AllInetTests/TcpSocketTest.PollWithFullBufferBlocks/0
+AllInetTests/SimpleTcpSocketTest.NonBlockingConnectNoListener/0
+AllInetTests/SimpleTcpSocketTest.NonBlockingConnect/0
+AllInetTests/SimpleTcpSocketTest.NonBlockingConnectRemoteClose/0
+AllInetTests/SimpleTcpSocketTest.NonBlockingConnectRefused/0
+AllInetTests/SimpleTcpSocketTest.SetGetTCPCongestionLargeReadBuffer/0
+AllInetTests/SimpleTcpSocketTest.SetGetTCPCongestionLargeReadBuffer/1
