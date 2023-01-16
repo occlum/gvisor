@@ -1,5 +1,10 @@
 # Run gVisor syscall tests on Occlum
 
+- Prepare bazel for gVisor installation, run
+```
+./prepare_bazel.sh
+```
+
 - To build the syscall tests, run
 ```
 ./build_and_install_syscall_tests.sh
