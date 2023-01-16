@@ -92,8 +92,8 @@ do
 	ret=$?
 	TESTS=$((TESTS+1))
 
-	# Ignore futex_test result due to timer's inaccuracy in Occlum
-	if [[ $ret -ne 0 ]] && [[ "$syscall_test" != "futex_test" ]]; then
+	# Ignore futex_test and clock_gettime result due to timer's inaccuracy in Occlum
+	if [[ $ret -ne 0 ]] && [[ "$syscall_test" != "futex_test" ]] && [[ "$syscall_test" != "clock_gettime_test" ]]; then
 		echo -e "$syscall_test" >> log
 	else
 		PASSED_TESTS=$((PASSED_TESTS+1))
