@@ -70,7 +70,7 @@ occlum new occlum_workspace
 pushd occlum_workspace
 if [ $OPERATION_MODE = "ngo" ];then
 	yq '.resource_limits.user_space_size.init = "800MB" |
-		.resource_limits.kernel_space_heap_size.init = "100MB" |
+		.resource_limits.kernel_space_heap_size.init = "512MB" |
 		.process.default_stack_size = "32MB"' -i Occlum.yaml
 else
 	new_json="$(jq '.resource_limits.user_space_size = "800MB" |
