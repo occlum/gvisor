@@ -44,3 +44,5 @@ AllInetTests/SimpleTcpSocketTest.SetSocketAttachDetachFilter/0
 AllInetTests/SimpleTcpSocketTest.SetSocketAttachDetachFilter/1
 AllInetTests/TcpSocketTest.MsgTrunc/0
 AllInetTests/TcpSocketTest.MsgTruncWithCtrunc/0
+AllInetTests/SimpleTcpSocketTest.SetMaxSeg/0
+AllInetTests/SimpleTcpSocketTest.SetMaxSeg/1
