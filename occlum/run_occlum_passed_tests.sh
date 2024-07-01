@@ -39,7 +39,12 @@ run_one_test(){
 	ret=""
 	if [ -f $TEST_BIN_DIR/$1 ]; then
 		printf "$GREEN running $1$NC \n"
-		if [[ $OPERATION_MODE = "ngo" ]];then
+		if [ $OPERATION_MODE = "ngo" ];then
+			get_blocklist_subtests $1
+			get_ngo_blocklist_subtests $1
+			FILTER=$FILTER$NGO_FILTER
+			occlum exec /bin/$1 --gtest_filter=-$FILTER
+		elif [ $OPERATION_MODE = "uring" ];then
 			get_blocklist_subtests $1
 			get_ngo_blocklist_subtests $1
 			FILTER=$FILTER$NGO_FILTER
@@ -59,9 +64,8 @@ run_one_test(){
 
 if [ -z $OPERATION_MODE ];then
 	echo -e "$GREEN Running test cases passed in occlum $NC\n"
-elif [ $OPERATION_MODE != "ngo" ];then
-	echo -e "parameter is wrong, you can use '"./run_occlum_passed_tests.sh ngo"' to run the tests passed in ngo"
-	exit -1
+elif [ $OPERATION_MODE = "uring" ];then
+	echo -e "$GREEN Running test cases passed in uring $NC\n"
 elif [ $OPERATION_MODE = "ngo" ];then
 	echo -e "$GREEN Running test cases passed in ngo $NC\n"
 fi
@@ -72,6 +76,11 @@ if [ $OPERATION_MODE = "ngo" ];then
 	yq '.resource_limits.user_space_size.init = "800MB" |
 		.resource_limits.kernel_space_heap_size.init = "512MB" |
 		.process.default_stack_size = "32MB"' -i Occlum.yaml
+elif [ $OPERATION_MODE = "uring" ];then
+	new_json="$(jq '.resource_limits.user_space_size = "800MB" |
+			.resource_limits.kernel_space_heap_size = "512MB" |
+			.process.default_stack_size = "32MB"' Occlum.json)" && \
+	echo "${new_json}" > Occlum.json
 else
 	new_json="$(jq '.resource_limits.user_space_size = "800MB" |
 			.resource_limits.kernel_space_heap_size = "100MB" |
@@ -85,7 +94,7 @@ touch log
 
 while read syscall_test;
 do
-	if [ `grep -c "$syscall_test" $TEST_BLOCKLIST` -eq 1 ] && [[ $OPERATION_MODE = "ngo" ]];then
+	if [ `grep -c "$syscall_test" $TEST_BLOCKLIST` -eq 1 ] && ([[ $OPERATION_MODE = "ngo" ]] || [[ $OPERATION_MODE = "uring" ]]); then
 		continue
 	fi
 	run_one_test $syscall_test
