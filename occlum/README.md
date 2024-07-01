@@ -26,6 +26,10 @@ Since not all the tests are passed in occlum, failure may be encountered.
 ```
 ./run_occlum_passed_tests.sh
 ```
+- Run passed tests on occlum with uring feature, run
+```
+./run_occlum_passed_tests.sh uring
+```
 - Run passed tests on ngo, run
 ```
 ./run_occlum_passed_tests.sh ngo
