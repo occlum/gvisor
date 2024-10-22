@@ -1087,12 +1087,13 @@ TEST_P(SimpleTcpSocketTest, CleanupOnConnectionRefused) {
            client_addrlen),
       SyscallSucceeds());
 
-  // Attempt #2, with the new socket and reused addr our connect should fail in
-  // the same way as before, not with an EADDRINUSE.
-  ASSERT_THAT(connect(client_s.get(),
-                      reinterpret_cast<const struct sockaddr*>(&bound_addr),
-                      bound_addrlen),
-              SyscallFailsWithErrno(ECONNREFUSED));
+  // In some linux version, the second connect syscall returns ECONNABORTED rather than ECONNREFUSED.
+  // https://github.com/axboe/liburing/issues/1274
+  ASSERT_THAT(
+      connect(client_s.get(),
+            reinterpret_cast<const struct sockaddr*>(&bound_addr),
+            bound_addrlen),
+      AnyOf(SyscallFailsWithErrno(ECONNREFUSED), SyscallFailsWithErrno(ECONNABORTED)));
 }
 
 // Test that we get an ECONNREFUSED with a nonblocking socket.
