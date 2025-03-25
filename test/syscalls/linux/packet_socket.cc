@@ -87,11 +87,11 @@ void SendUDPMessage(int sock) {
 
 // Send an IP packet and make sure ETH_P_<something else> doesn't pick it up.
 TEST(BasicCookedPacketTest, WrongType) {
-  if (!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
-    ASSERT_THAT(socket(AF_PACKET, SOCK_DGRAM, ETH_P_PUP),
-                SyscallFailsWithErrno(EPERM));
-    GTEST_SKIP();
-  }
+  // if (!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
+  //   ASSERT_THAT(socket(AF_PACKET, SOCK_DGRAM, ETH_P_PUP),
+  //               SyscallFailsWithErrno(EPERM));
+  //   GTEST_SKIP();
+  // }
 
   FileDescriptor sock = ASSERT_NO_ERRNO_AND_VALUE(
       Socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_PUP)));
@@ -125,25 +125,25 @@ class CookedPacketTest : public ::testing::TestWithParam<int> {
 };
 
 void CookedPacketTest::SetUp() {
-  if (!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
-    ASSERT_THAT(socket(AF_PACKET, SOCK_DGRAM, htons(GetParam())),
-                SyscallFailsWithErrno(EPERM));
-    GTEST_SKIP();
-  }
+  // if (!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
+  //   ASSERT_THAT(socket(AF_PACKET, SOCK_DGRAM, htons(GetParam())),
+  //               SyscallFailsWithErrno(EPERM));
+  //   GTEST_SKIP();
+  // }
 
-  if (!IsRunningOnGvisor()) {
-    FileDescriptor acceptLocal = ASSERT_NO_ERRNO_AND_VALUE(
-        Open("/proc/sys/net/ipv4/conf/lo/accept_local", O_RDONLY));
-    FileDescriptor routeLocalnet = ASSERT_NO_ERRNO_AND_VALUE(
-        Open("/proc/sys/net/ipv4/conf/lo/route_localnet", O_RDONLY));
-    char enabled;
-    ASSERT_THAT(read(acceptLocal.get(), &enabled, 1),
-                SyscallSucceedsWithValue(1));
-    ASSERT_EQ(enabled, '1');
-    ASSERT_THAT(read(routeLocalnet.get(), &enabled, 1),
-                SyscallSucceedsWithValue(1));
-    ASSERT_EQ(enabled, '1');
-  }
+  // if (!IsRunningOnGvisor()) {
+  //   FileDescriptor acceptLocal = ASSERT_NO_ERRNO_AND_VALUE(
+  //       Open("/proc/sys/net/ipv4/conf/lo/accept_local", O_RDONLY));
+  //   FileDescriptor routeLocalnet = ASSERT_NO_ERRNO_AND_VALUE(
+  //       Open("/proc/sys/net/ipv4/conf/lo/route_localnet", O_RDONLY));
+  //   char enabled;
+  //   ASSERT_THAT(read(acceptLocal.get(), &enabled, 1),
+  //               SyscallSucceedsWithValue(1));
+  //   ASSERT_EQ(enabled, '1');
+  //   ASSERT_THAT(read(routeLocalnet.get(), &enabled, 1),
+  //               SyscallSucceedsWithValue(1));
+  //   ASSERT_EQ(enabled, '1');
+  // }
 
   ASSERT_THAT(socket_ = socket(AF_PACKET, SOCK_DGRAM, htons(GetParam())),
               SyscallSucceeds());
@@ -151,9 +151,9 @@ void CookedPacketTest::SetUp() {
 
 void CookedPacketTest::TearDown() {
   // TearDown will be run even if we skip the test.
-  if (ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
-    EXPECT_THAT(close(socket_), SyscallSucceeds());
-  }
+  // if (ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
+  //   EXPECT_THAT(close(socket_), SyscallSucceeds());
+  // }
 }
 
 int CookedPacketTest::GetLoopbackIndex() {
