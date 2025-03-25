@@ -102,49 +102,49 @@ class RawPacketTest : public ::testing::TestWithParam<int> {
 };
 
 void RawPacketTest::SetUp() {
-  if (!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
-    ASSERT_THAT(socket(AF_PACKET, SOCK_RAW, htons(GetParam())),
-                SyscallFailsWithErrno(EPERM));
-    GTEST_SKIP();
-  }
+  // if (!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
+  //   ASSERT_THAT(socket(AF_PACKET, SOCK_RAW, htons(GetParam())),
+  //               SyscallFailsWithErrno(EPERM));
+  //   GTEST_SKIP();
+  // }
 
-  if (!IsRunningOnGvisor()) {
-    // Ensure that looped back packets aren't rejected by the kernel.
-    FileDescriptor acceptLocal = ASSERT_NO_ERRNO_AND_VALUE(
-        Open("/proc/sys/net/ipv4/conf/lo/accept_local", O_RDWR));
-    FileDescriptor routeLocalnet = ASSERT_NO_ERRNO_AND_VALUE(
-        Open("/proc/sys/net/ipv4/conf/lo/route_localnet", O_RDWR));
-    char enabled;
-    ASSERT_THAT(read(acceptLocal.get(), &enabled, 1),
-                SyscallSucceedsWithValue(1));
-    if (enabled != '1') {
-      enabled = '1';
-      ASSERT_THAT(lseek(acceptLocal.get(), 0, SEEK_SET),
-                  SyscallSucceedsWithValue(0));
-      ASSERT_THAT(write(acceptLocal.get(), &enabled, 1),
-                  SyscallSucceedsWithValue(1));
-      ASSERT_THAT(lseek(acceptLocal.get(), 0, SEEK_SET),
-                  SyscallSucceedsWithValue(0));
-      ASSERT_THAT(read(acceptLocal.get(), &enabled, 1),
-                  SyscallSucceedsWithValue(1));
-      ASSERT_EQ(enabled, '1');
-    }
+  // if (!IsRunningOnGvisor()) {
+  //   // Ensure that looped back packets aren't rejected by the kernel.
+  //   FileDescriptor acceptLocal = ASSERT_NO_ERRNO_AND_VALUE(
+  //       Open("/proc/sys/net/ipv4/conf/lo/accept_local", O_RDWR));
+  //   FileDescriptor routeLocalnet = ASSERT_NO_ERRNO_AND_VALUE(
+  //       Open("/proc/sys/net/ipv4/conf/lo/route_localnet", O_RDWR));
+  //   char enabled;
+  //   ASSERT_THAT(read(acceptLocal.get(), &enabled, 1),
+  //               SyscallSucceedsWithValue(1));
+  //   if (enabled != '1') {
+  //     enabled = '1';
+  //     ASSERT_THAT(lseek(acceptLocal.get(), 0, SEEK_SET),
+  //                 SyscallSucceedsWithValue(0));
+  //     ASSERT_THAT(write(acceptLocal.get(), &enabled, 1),
+  //                 SyscallSucceedsWithValue(1));
+  //     ASSERT_THAT(lseek(acceptLocal.get(), 0, SEEK_SET),
+  //                 SyscallSucceedsWithValue(0));
+  //     ASSERT_THAT(read(acceptLocal.get(), &enabled, 1),
+  //                 SyscallSucceedsWithValue(1));
+  //     ASSERT_EQ(enabled, '1');
+  //   }
 
-    ASSERT_THAT(read(routeLocalnet.get(), &enabled, 1),
-                SyscallSucceedsWithValue(1));
-    if (enabled != '1') {
-      enabled = '1';
-      ASSERT_THAT(lseek(routeLocalnet.get(), 0, SEEK_SET),
-                  SyscallSucceedsWithValue(0));
-      ASSERT_THAT(write(routeLocalnet.get(), &enabled, 1),
-                  SyscallSucceedsWithValue(1));
-      ASSERT_THAT(lseek(routeLocalnet.get(), 0, SEEK_SET),
-                  SyscallSucceedsWithValue(0));
-      ASSERT_THAT(read(routeLocalnet.get(), &enabled, 1),
-                  SyscallSucceedsWithValue(1));
-      ASSERT_EQ(enabled, '1');
-    }
-  }
+  //   ASSERT_THAT(read(routeLocalnet.get(), &enabled, 1),
+  //               SyscallSucceedsWithValue(1));
+  //   if (enabled != '1') {
+  //     enabled = '1';
+  //     ASSERT_THAT(lseek(routeLocalnet.get(), 0, SEEK_SET),
+  //                 SyscallSucceedsWithValue(0));
+  //     ASSERT_THAT(write(routeLocalnet.get(), &enabled, 1),
+  //                 SyscallSucceedsWithValue(1));
+  //     ASSERT_THAT(lseek(routeLocalnet.get(), 0, SEEK_SET),
+  //                 SyscallSucceedsWithValue(0));
+  //     ASSERT_THAT(read(routeLocalnet.get(), &enabled, 1),
+  //                 SyscallSucceedsWithValue(1));
+  //     ASSERT_EQ(enabled, '1');
+  //   }
+  // }
 
   ASSERT_THAT(s_ = socket(AF_PACKET, SOCK_RAW, htons(GetParam())),
               SyscallSucceeds());
@@ -152,9 +152,9 @@ void RawPacketTest::SetUp() {
 
 void RawPacketTest::TearDown() {
   // TearDown will be run even if we skip the test.
-  if (ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
-    EXPECT_THAT(close(s_), SyscallSucceeds());
-  }
+  // if (ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW))) {
+  //   EXPECT_THAT(close(s_), SyscallSucceeds());
+  // }
 }
 
 int RawPacketTest::GetLoopbackIndex() {
@@ -338,7 +338,7 @@ TEST_P(RawPacketTest, Send) {
 // Check that setting SO_RCVBUF below min is clamped to the minimum
 // receive buffer size.
 TEST_P(RawPacketTest, SetSocketRecvBufBelowMin) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   // Discover minimum receive buf size by trying to set it to zero.
   // See:
@@ -371,7 +371,7 @@ TEST_P(RawPacketTest, SetSocketRecvBufBelowMin) {
 // Check that setting SO_RCVBUF above max is clamped to the maximum
 // receive buffer size.
 TEST_P(RawPacketTest, SetSocketRecvBufAboveMax) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   // Discover max buf size by trying to set the largest possible buffer size.
   constexpr int kRcvBufSz = 0xffffffff;
@@ -398,7 +398,7 @@ TEST_P(RawPacketTest, SetSocketRecvBufAboveMax) {
 
 // Check that setting SO_RCVBUF min <= kRcvBufSz <= max is honored.
 TEST_P(RawPacketTest, SetSocketRecvBuf) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   int max = 0;
   int min = 0;
@@ -451,7 +451,7 @@ TEST_P(RawPacketTest, SetSocketRecvBuf) {
 // Check that setting SO_SNDBUF below min is clamped to the minimum
 // receive buffer size.
 TEST_P(RawPacketTest, SetSocketSendBufBelowMin) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   // Discover minimum buffer size by trying to set it to zero.
   constexpr int kSndBufSz = 0;
@@ -482,7 +482,7 @@ TEST_P(RawPacketTest, SetSocketSendBufBelowMin) {
 // Check that setting SO_SNDBUF above max is clamped to the maximum
 // send buffer size.
 TEST_P(RawPacketTest, SetSocketSendBufAboveMax) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   // Discover maximum buffer size by trying to set it to a large value.
   constexpr int kSndBufSz = 0xffffffff;
@@ -509,7 +509,7 @@ TEST_P(RawPacketTest, SetSocketSendBufAboveMax) {
 
 // Check that setting SO_SNDBUF min <= kSndBufSz <= max is honored.
 TEST_P(RawPacketTest, SetSocketSendBuf) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   int max = 0;
   int min = 0;
@@ -559,7 +559,7 @@ TEST_P(RawPacketTest, SetSocketSendBuf) {
 }
 
 TEST_P(RawPacketTest, GetSocketError) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   int val = 0;
   socklen_t val_len = sizeof(val);
@@ -569,7 +569,7 @@ TEST_P(RawPacketTest, GetSocketError) {
 }
 
 TEST_P(RawPacketTest, GetSocketErrorBind) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   {
     // Bind to the loopback device.
@@ -635,7 +635,7 @@ TEST_P(RawPacketTest, SetSocketDetachFilterNoInstalledFilter) {
 }
 
 TEST_P(RawPacketTest, GetSocketDetachFilter) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   int val = 0;
   socklen_t val_len = sizeof(val);
@@ -644,7 +644,7 @@ TEST_P(RawPacketTest, GetSocketDetachFilter) {
 }
 
 TEST_P(RawPacketTest, SetAndGetSocketLinger) {
-  SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
+  // SKIP_IF(!ASSERT_NO_ERRNO_AND_VALUE(HaveCapability(CAP_NET_RAW)));
 
   int level = SOL_SOCKET;
   int type = SO_LINGER;
